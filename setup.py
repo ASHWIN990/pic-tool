@@ -3,12 +3,7 @@
 import os
 import platform
 from pip._internal.utils.misc import get_installed_distributions
-
-try:
-    from time import sleep
-    is_time_module_avb=True
-except ImportError as e:
-    is_time_module_avb=False
+from time import sleep
 
 ## TRYING SOME COLORS ##
 
@@ -35,8 +30,7 @@ elif platform.system() == 'Darwin':
     platform_current="macOS"
 else:
     print("Taking Platorm as Linux Cause Cant Determine the Platform")
-    if is_time_module_avb == True:
-        sleep(2)
+    sleep(2)
     platform_current="Linux"
 
 ## FUNCTION TO CLEAR THE SCREEN ##
