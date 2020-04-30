@@ -28,7 +28,7 @@ def image_width_take():
         print("\n\nWidth must be number !!\n")
         exit()
 
-def single_img_resize():
+def single_img_thumbnailer():
 
     # Note: For Windows while giving the path to the image or folder give paths as :-
     # Example : F:\\Wallpaper\\Nature\\Forest.jpg      With double \\
@@ -39,15 +39,15 @@ def single_img_resize():
         exit()
     
     img_basename=os.path.basename(img_path)
+    print(f"image basename {img_basename}")
     image = Image.open(img_path)
     print(f"\nFormat of image is : {image.format}")
     print(f"\nWidth : {image.size[0]}      Height : {image.size[1]}") ## Size of original image
-    resized_image = image.resize((image_width_take(), image_height_take())) ## Width, Height
-    resized_image.save(f'resized_{img_basename}')
-    print(f"\nWidth : {resized_image.size[0]}      Height : {resized_image.size[1]}") ## Size of original image
+    image.thumbnail((image_width_take(), image_height_take())) ## Width, Height
+    image.save(f'thumbnail_{img_basename}')
     print("\nDone ✓")
 
-def dir_image_resize_window():
+def dir_image_thumbnailer_window():
 
 
     # Note: For Windows while giving the path to the image or folder give paths as :-
@@ -68,18 +68,18 @@ def dir_image_resize_window():
         if os.path.isfile(f"{img_dir_path}\\\\{files}"):
             try:
                 image = Image.open(f"{img_dir_path}\\\\{files}")
-                print(f'\rResizing image : {files}                                     ', end='')
+                print(f'\rThumbnailing image : {files}                                     ', end='')
                 sys.stdout.flush()
             except:
                 pass
             else:
-                resized_image = image.resize((image_width, image_height))
-                resized_image.save(f'resized_{files}')
+                image.thumbnail((image_width, image_height))
+                image.save(f'thumbnail_{files}')
     print("\n\nDone ✓")
     exit(0)
 
 
-def dir_image_resize_other():
+def dir_image_thumbnailer_other():
 
     img_dir_path=input("\nEnter the path of the image directory : ")
     if os.path.isdir(img_dir_path) != True:
@@ -96,14 +96,14 @@ def dir_image_resize_other():
         if os.path.isfile(f"{img_dir_path}/{files}"):
             try:
                 image = Image.open(f"{img_dir_path}/{files}")
-                print(f'\rResizing image : {files}                                     ', end='')
+                print(f'\rThumbnailing image : {files}                                     ', end='')
                 sys.stdout.flush()
             except:
                 pass
             else:
                 pass
-                resized_image = image.resize((image_width, image_height))
-                resized_image.save(f'resized_{files}')
+                image.thumbnail((image_width, image_height))
+                image.save(f'thumbnail_{files}')
     print("\n\nDone ✓")
     exit(0)
 

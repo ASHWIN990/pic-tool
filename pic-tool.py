@@ -4,17 +4,18 @@ import os
 import sys
 import platform
 from time import sleep
+from PIL import Image
 
 ## TRYING SOME COLORS ##
 
-black_col="\u001b[30m"
-red_col="\u001b[31m"
-green_col="\u001b[32m"
-yellow_col="\u001b[33m"
-blue_col="\u001b[34m"
-magenta_col="\u001b[35m"
-cyan_col="\u001b[36m"
-white_col="\u001b[37m"
+black_col="\u001b[30;1m"
+red_col="\u001b[31;1m"
+green_col="\u001b[32;1m"
+yellow_col="\u001b[33;1m"
+blue_col="\u001b[34;1m"
+magenta_col="\u001b[35;1m"
+cyan_col="\u001b[36;1m"
+white_col="\u001b[37;1m"
 reset_col="\u001b[0m"
 
 ## HELP SECTION ##
@@ -32,9 +33,11 @@ pic-tool is a image manipulation tool writeen in python by ASHWINI SAHU.
 
 Usage: python3 pic-tool.py [OPTIONS...]
 
--nc, --no-clear         Use this flag to stop the script from clearing the screen.
--na, --no-art           Use this flag to not print the ASCII art.
--h,  --help             Use this flag to see the help section.
+-dm, -d, --dir-mode         Define Directory mode.
+-sm, -s, --sin-mode         Define Single image mode.      By Default
+-nc,     --no-clear         Use this flag to stop the script from clearing the screen.
+-na,     --no-art           Use this flag to not print the ASCII art.
+-h,      --help             Use this flag to see the help section.
 
 You can pass multiple flags at same time like :- python3 pic-tool.py -na -nc
 
@@ -64,9 +67,11 @@ pic-tool is a image manipulation tool writeen in python by ASHWINI SAHU.
 
 Usage: python3 pic-tool.py [OPTIONS...]
 
--nc, --no-clear         Use this flag to stop the script from clearing the screen.
--na, --no-art           Use this flag to not print the ASCII art.
--h,  --help             Use this flag to see the help section.
+-dm, -d, --dir-mode         Define Directory mode.
+-sm, -s, --sin-mode         Define Single image mode.      By Default
+-nc,     --no-clear         Use this flag to stop the script from clearing the screen.
+-na,     --no-art           Use this flag to not print the ASCII art.
+-h,      --help             Use this flag to see the help section.
 
 You can pass multiple flags at same time like :- python3 pic-tool.py -na -nc
 
@@ -88,29 +93,50 @@ This tool can do many things like :-
                                         * MORE TO BE ADDED
         """)
 
+## HELP DOCUMENTATION FUNCTION ##
+
 def pic_tool_help():
     if os.name == 'nt':
         pic_tool_help_win()
     else:
         pic_tool_help_other()
 
+for args in sys.argv:
+    if args == "-h" or args == "--h" or args == "-help" or args =="--help": ## CHECKING IF YOU WANT TO HELP OR NOT ##
+        pic_tool_help()
+        exit()
+
 ## CHECKING THE COMMAND LINE ARGVS ##
 
 do_clear=True
 want_art=True
+dir_mode=False
+sin_mode=False
+sin_mode_arg=False
+dir_mode_ask_flag=True
 
 for args in sys.argv:
-    if args == "-h" or args == "--h" or args == "-help" or args =="--help":
-        pic_tool_help()
-        exit()
+    if args == "--dir-mode" or args == "-dm" or args == "-d": ## CHECKING IF YOU WANT THE DIRECTORY MODE BY DEFAULT ##
+        dir_mode=True
+    else:
+        dir_mode_ask_flag=True
 
-## Bug in color in windows ##
 for args in sys.argv:
-    if args == "--no-clear" or args == "-nc":
+    if args == "--sin-mode" or args == "-sm" or args == "-s": ## CHECKING IF YOU WANT THE SINGLE MODE BY DEFAULT ##
+        sin_mode_arg=True
+        sin_mode=True
+    else:
+        dir_mode_ask_flag=True
+
+
+## NOTE : IF YOU PROVIDE BOTH SINLE AND DIRECTORY MODE FLAG IT WILL TAKE DIRECTORY MODE AS PRIORITY ##
+
+for args in sys.argv:
+    if args == "--no-clear" or args == "-nc": ## CHECKING IF YOU WANT TO CLEAR THE SCREEN OR NOT ##
         do_clear=False
 
 for args in sys.argv:
-    if args == "--no-art" or args == "-na":
+    if args == "--no-art" or args == "-na": ## CHECKING IF YOU WANT THE ASCII ART OR NOT ##
         want_art=False
 
 ## FUNCTION TO CLEAR THE SCREEN ##
@@ -129,6 +155,7 @@ def do_clear_scr():
             os.system("clear")
 
 ## BANNER FUNCTION ##
+
 def banner():
     if want_art == True:
         if os.name == 'nt':
@@ -136,6 +163,8 @@ def banner():
                 banner_print_no_color()
             else:
                 banner_print_color()
+        else:
+            banner_print_color()
     elif want_art == False:
         pass
 
@@ -254,24 +283,535 @@ def option_taker():
             option_taker()
 
 
+## CHECKING FOR THE MODE ##
+
+def dir_mode_ask():
+    if dir_mode_ask_flag == True:
+        dir_mode_opt=input("\n    Do yo want the Single Image or Directory Mode  (s/d): ")
+        if dir_mode_opt == 'S' or dir_mode_opt == 's':
+            sin_mode=True
+            tmp_file=open(".tmp_pic-tool", "at")
+            tmp_file.write("s")
+            tmp_file.close()
+        elif dir_mode_opt == 'D' or dir_mode_opt == 'd':
+            dir_mode=True
+            tmp_file=open(".tmp_pic-tool", "at")
+            tmp_file.write("d")
+            tmp_file.close()
+        else:
+            print("\n    Enter right option (S/s) for Single Image or (D/d) for Directory Mode")
+            dir_mode_ask()
+
+if dir_mode == True:
+    dir_mode_ask_flag=False
+    sin_mode=False
+elif sin_mode_arg == True:
+    dir_mode_ask_flag=False
+else:
+    dir_mode_ask_flag=True
+    dir_mode_ask()
+    if os.path.exists(".tmp_pic-tool"):
+        tmp_file=open(".tmp_pic-tool", "r")
+        tmp_check=tmp_file.read()
+        if tmp_check == 's':
+            sin_mode=True
+        elif tmp_check == 'd':
+            dir_mode=True
+        if os.path.exists(".tmp_pic-tool"):
+            os.remove(".tmp_pic-tool")
+        else:
+            pass
+    else:
+            pass
 
 ###
 
-
+            ############    MAIN CODE IS HERE     #######################
 
 
 ###
+
+## FUNCTION TO TAKE HEIGHT OF IMAGE ##
+
+def image_height_take():
+    img_hei=input("\nEnter the new Height for the image : ")
+    temp_hei = img_hei.isnumeric()
+    if temp_hei == True:
+        img_hei=int(img_hei)
+        return img_hei
+    else:
+        print("\nHeight must be number !!\n")
+        exit()
+
+## FUNCTION TO TAKE WIDTH OF IMAGE ##
+
+def image_width_take():
+    img_wid=input("\nEnter the new Width for the image : ")
+    temp_wid = img_wid.isnumeric()
+    if temp_wid == True:
+        img_wid=int(img_wid)
+        return img_wid
+    else:
+        print("\n\nWidth must be number !!\n")
+        exit()
+
+
+
+
+################################################ 1. IMAGE RESIZE ####################################################################################
+
+
+def single_img_resize():
+
+    # Note: For Windows while giving the path to the image or folder give paths as :-
+    # Example : F:\\Wallpaper\\Nature\\Forest.jpg      With double \\
+
+    img_path=input("\nEnter the path of the image : ")
+    if os.path.isfile(img_path) != True:
+        print("\nImage not found")
+        exit()
+    
+    img_basename=os.path.basename(img_path)
+    image = Image.open(img_path)
+    print(f"\nFormat of image is : {image.format}")
+    print(f"\nWidth : {image.size[0]}      Height : {image.size[1]}") ## Size of original image
+    resized_image = image.resize((image_width_take(), image_height_take())) ## Width, Height
+    resized_image.save(f'resized_{img_basename}')
+    print(f"\nWidth : {resized_image.size[0]}      Height : {resized_image.size[1]}") ## Size of original image
+    print("\nDone ✓")
+    exit(0)
+
+
+def dir_image_resize_window():
+
+
+    # Note: For Windows while giving the path to the image or folder give paths as :-
+    # Example : F:\\Wallpaper\\Nature\\Forest.jpg      With double \\
+
+    img_dir_path=input("\nEnter the path of the image directory : ")
+    if os.path.isdir(img_dir_path) != True:
+        print("\nDirectory not found")
+        exit()
+    list_of_files = os.listdir(img_dir_path)
+    if len(list_of_files) == 0:
+        print("\nDirectory is empty")
+        exit(0)
+    image_width=image_width_take()
+    image_height=image_height_take()
+    print("\n")
+    for files in list_of_files:
+        if os.path.isfile(f"{img_dir_path}\\\\{files}"):
+            try:
+                image = Image.open(f"{img_dir_path}\\\\{files}")
+                print(f'\rResizing image : {files}                                     ', end='')
+                sys.stdout.flush()
+            except:
+                pass
+            else:
+                resized_image = image.resize((image_width, image_height))
+                resized_image.save(f'resized_{files}')
+    print("\n\nDone ✓")
+    exit(0)
+
+def dir_image_resize_other():
+
+    img_dir_path=input("\nEnter the path of the image directory : ")
+    if os.path.isdir(img_dir_path) != True:
+        print("\nDirectory not found")
+        exit()
+    list_of_files = os.listdir(img_dir_path)
+    if len(list_of_files) == 0:
+        print("\nDirectory is empty")
+        exit(0)
+    image_width=image_width_take()
+    image_height=image_height_take()
+    print("\n")
+    for files in list_of_files:
+        if os.path.isfile(f"{img_dir_path}/{files}"):
+            try:
+                image = Image.open(f"{img_dir_path}/{files}")
+                print(f'\rResizing image : {files}                                     ', end='')
+                sys.stdout.flush()
+            except:
+                pass
+            else:
+                pass
+                resized_image = image.resize((image_width, image_height))
+                resized_image.save(f'resized_{files}')
+    print("\n\nDone ✓")
+    exit(0)
+
+def image_resize():
+    if sin_mode == True:
+        single_img_resize()
+    elif dir_mode == True:
+        if os.name == 'nt':
+            dir_image_resize_window()
+        else:
+            dir_image_resize_other()
+
+
+
+
+################################################ 2. IMAGE COMPRESS ####################################################################################
+
+
+def single_img_compress():
+
+    # Note: For Windows while giving the path to the image or folder give paths as :-
+    # Example : F:\\Wallpaper\\Nature\\Forest.jpg      With double \\
+
+    img_path=input("\nEnter the path of the image : ")
+    if os.path.isfile(img_path) != True:
+        print("\nImage not found")
+        exit()
+    compr_rat=input("Enter the Compress Ratio (ex: 50) : ")
+    compr_rat_tmp = compr_rat.isnumeric()
+    if compr_rat_tmp == True:
+        compr_rat=int(compr_rat)
+    else:
+        print("\n\nCompress Ratio must be number.\n")
+        exit(0)
+    img_basename=os.path.basename(img_path)
+    image = Image.open(img_path)
+    print(f"\nFormat of image is : {image.format}")
+    print(f"\nCompression Ration of image is : {compr_rat}")
+    image.save(f'compressed_{img_basename}', quality=compr_rat)
+    print("\nDone ✓")
+
+def dir_image_compress_window():
+
+
+    # Note: For Windows while giving the path to the image or folder give paths as :-
+    # Example : F:\\Wallpaper\\Nature\\Forest.jpg      With double \\
+
+    img_dir_path=input("\nEnter the path of the image directory : ")
+    if os.path.isdir(img_dir_path) != True:
+        print("\nDirectory not found")
+        exit()
+    list_of_files = os.listdir(img_dir_path)
+    if len(list_of_files) == 0:
+        print("\nDirectory is empty")
+        exit(0)
+    compr_rat=input("Enter the Compress Ratio (ex: 50) : ")
+    compr_rat_tmp = compr_rat.isnumeric()
+    if compr_rat_tmp == True:
+        compr_rat=int(compr_rat)
+    else:
+        print("\n\nCompress Ratio must be number.\n")
+        exit(0)
+    print("\n")
+    for files in list_of_files:
+        if os.path.isfile(f"{img_dir_path}\\\\{files}"):
+            try:
+                image = Image.open(f"{img_dir_path}\\\\{files}")
+            except:
+                pass
+            else:
+                print(f'\rCompressing image : {files}                                     ', end='')
+                sys.stdout.flush()
+                image.save(f'compressed_{files}', quality=compr_rat)
+    print("\n\nDone ✓")
+    exit(0)
+
+
+def dir_image_compress_other():
+
+    img_dir_path=input("\nEnter the path of the image directory : ")
+    if os.path.isdir(img_dir_path) != True:
+        print("\nDirectory not found")
+        exit()
+    list_of_files = os.listdir(img_dir_path)
+    if len(list_of_files) == 0:
+        print("\nDirectory is empty")        
+        exit(0)
+    compr_rat=input("Enter the Compress Ratio (ex: 50) : ")
+    compr_rat_tmp = compr_rat.isnumeric()
+    if compr_rat_tmp == True:
+        compr_rat=int(compr_rat)
+    else:
+        print("\n\nCompress Ratio must be number.\n")
+        exit(0)
+    print("\n")
+    for files in list_of_files:
+        if os.path.isfile(f"{img_dir_path}/{files}"):
+            try:
+                image = Image.open(f"{img_dir_path}/{files}")
+            except:
+                pass
+            else:
+                print(f'\rCompressing image : {files}                                     ', end='')
+                sys.stdout.flush()
+                image.save(f'compressed_{files}', quality=compr_rat)
+    print("\n\nDone ✓")
+    exit(0)
+
+def image_compress():
+    if sin_mode == True:
+        single_img_compress()
+    elif dir_mode == True:
+        if os.name == 'nt':
+            dir_image_compress_window()
+        else:
+            dir_image_compress_other()
+
+
+
+
+################################################ 3. IMAGE THUMBNAIL MAKER ####################################################################################
+
+
+def single_img_thumbnailer():
+
+    # Note: For Windows while giving the path to the image or folder give paths as :-
+    # Example : F:\\Wallpaper\\Nature\\Forest.jpg      With double \\
+
+    img_path=input("\nEnter the path of the image : ")
+    if os.path.isfile(img_path) != True:
+        print("\nImage not found")
+        exit()
+    
+    img_basename=os.path.basename(img_path)
+    image = Image.open(img_path)
+    print(f"\nFormat of image is : {image.format}")
+    print(f"\nWidth : {image.size[0]}      Height : {image.size[1]}") ## Size of original image
+    image.thumbnail((image_width_take(), image_height_take())) ## Width, Height
+    image.save(f'thumbnail_{img_basename}')
+    print("\nDone ✓")
+
+def dir_image_thumbnailer_window():
+
+
+    # Note: For Windows while giving the path to the image or folder give paths as :-
+    # Example : F:\\Wallpaper\\Nature\\Forest.jpg      With double \\
+
+    img_dir_path=input("\nEnter the path of the image directory : ")
+    if os.path.isdir(img_dir_path) != True:
+        print("\nDirectory not found")
+        exit()
+    list_of_files = os.listdir(img_dir_path)
+    if len(list_of_files) == 0:
+        print("\nDirectory is empty")
+        exit(0)
+    image_width=image_width_take()
+    image_height=image_height_take()
+    print("\n")
+    for files in list_of_files:
+        if os.path.isfile(f"{img_dir_path}\\\\{files}"):
+            try:
+                image = Image.open(f"{img_dir_path}\\\\{files}")
+                print(f'\rThumbnailing image : {files}                                     ', end='')
+                sys.stdout.flush()
+            except:
+                pass
+            else:
+                image.thumbnail((image_width, image_height))
+                image.save(f'thumbnail_{files}')
+    print("\n\nDone ✓")
+    exit(0)
+
+
+def dir_image_thumbnailer_other():
+
+    img_dir_path=input("\nEnter the path of the image directory : ")
+    if os.path.isdir(img_dir_path) != True:
+        print("\nDirectory not found")
+        exit()
+    list_of_files = os.listdir(img_dir_path)
+    if len(list_of_files) == 0:
+        print("\nDirectory is empty")        
+        exit(0)
+    image_width=image_width_take()
+    image_height=image_height_take()
+    print("\n")
+    for files in list_of_files:
+        if os.path.isfile(f"{img_dir_path}/{files}"):
+            try:
+                image = Image.open(f"{img_dir_path}/{files}")
+                print(f'\rThumbnailing image : {files}                                     ', end='')
+                sys.stdout.flush()
+            except:
+                pass
+            else:
+                pass
+                image.thumbnail((image_width, image_height))
+                image.save(f'thumbnail_{files}')
+    print("\n\nDone ✓")
+    exit(0)
+
+def image_thumbnailer():
+    if sin_mode == True:
+        single_img_thumbnailer()
+    elif dir_mode == True:
+        if os.name == 'nt':
+            dir_image_thumbnailer_window()
+        else:
+            dir_image_thumbnailer_other()
+
+
+
+
+################################################ 4. IMAGE FORMAT CHANGER ####################################################################################
+
+
+def single_img_ext_changer():
+
+    # Note: For Windows while giving the path to the image or folder give paths as :-
+    # Example : F:\\Wallpaper\\Nature\\Forest.jpg      With double \\
+
+    img_path=input("\nEnter the path of the image : ")
+    if os.path.isfile(img_path) != True:
+        print("\nImage not found")
+        exit()
+    new_ext=input("\nEnter the new Extension (ex: png) : ")
+    img_basename=os.path.basename(img_path)
+    img_name=os.path.splitext(img_basename)[0]
+    image = Image.open(img_path)
+    print(f"\nFormat of image is : {image.format}")
+    print(f"\nWidth : {image.size[0]}      Height : {image.size[1]}") ## Size of original image
+    try:
+        image.save(f'{img_name}.{new_ext}')
+        img_name=os.path.splitext(files)[0]
+        image.save(f'{img_name}.{new_ext}')
+    except:
+        pass
+    else:
+        pass
+    print("\nDone ✓")
+
+def dir_image_ext_changer_window():
+
+
+    # Note: For Windows while giving the path to the image or folder give paths as :-
+    # Example : F:\\Wallpaper\\Nature\\Forest.jpg      With double \\
+
+    img_dir_path=input("\nEnter the path of the image directory : ")
+    if os.path.isdir(img_dir_path) != True:
+        print("\nDirectory not found")
+        exit()
+    list_of_files = os.listdir(img_dir_path)
+    if len(list_of_files) == 0:
+        print("\nDirectory is empty")
+        exit(0)
+    print("\n")
+    new_ext=input("\nEnter the new Extension (ex: png) : ")
+    for files in list_of_files:
+        if os.path.isfile(f"{img_dir_path}\\\\{files}"):
+            try:
+                image = Image.open(f"{img_dir_path}\\\\{files}")
+                print(f'\rChanging Extension : {files}                                     ', end='')
+                sys.stdout.flush()
+                img_name=os.path.splitext(files)[0]
+                image.save(f'{img_name}.{new_ext}')
+            except:
+                pass
+            else:
+                pass
+
+    print("\n\nDone ✓")
+    exit(0)
+
+
+def dir_image_ext_changer_other():
+
+    img_dir_path=input("\nEnter the path of the image directory : ")
+    if os.path.isdir(img_dir_path) != True:
+        print("\nDirectory not found")
+        exit()
+    list_of_files = os.listdir(img_dir_path)
+    if len(list_of_files) == 0:
+        print("\nDirectory is empty")        
+        exit(0)
+    print("\n")
+    new_ext=input("Enter the new Extension (ex: png) : ")
+    for files in list_of_files:
+        if os.path.isfile(f"{img_dir_path}/{files}"):
+            try:
+                image = Image.open(f"{img_dir_path}/{files}")
+                print(f'\rChanging Extension : {files}                                     ', end='')
+                sys.stdout.flush()
+                img_name=os.path.splitext(files)[0]
+                image.save(f'{img_name}.{new_ext}')
+            except:
+                pass
+            else:
+                pass
+
+    print("\n\nDone ✓")
+    exit(0)
+
+def image_ext_changer():
+    if sin_mode == True:
+        single_img_ext_changer()
+    elif dir_mode == True:
+        if os.name == 'nt':
+            dir_image_ext_changer_window()
+        else:
+            dir_image_ext_changer_other()
+
+
+
+
+################################################ 5. ROTATE THE IMAGE ####################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 def option_launcher(opt):
 
     if opt == "1":
-        print("1")
+        image_resize()
     elif opt == "2":
-        pass
+        image_compress()
     elif opt == "3":
-        pass
+        image_thumbnailer()
     elif opt == "4":
         pass
     elif opt == "5":
@@ -282,5 +822,5 @@ def option_launcher(opt):
         print(f"\n   Exiting the tool Bye !!")
         exit()
 
-menu_list()
-option_taker()
+menu_list() ## CALLING THE MENU LIST ##
+option_taker() ## CALLING THE OPTION TAKER FUNCTION ##

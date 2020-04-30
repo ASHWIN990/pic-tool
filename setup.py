@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import sys
 import platform
 from pip._internal.utils.misc import get_installed_distributions
 from time import sleep
@@ -117,6 +118,7 @@ required_pkg=req_pak() ## MAKKING A LIST OF INSTALLED PACKAGES
 installed_packages=chk_installed_pkg() ## MAKING A LIST OF INSTALLED PACKAGES
 
 print(f"{yellow_col}Thanks for installing the pic-tool {red_col}❤{reset_col}\n")
+sleep(3) ## WAIT FOR 3 SECOND JUST FOR FUN
 print(f"The current platform is {green_col}{platform_current} {reset_col}and release is {green_col}{platform.release()}{reset_col}")
 print(f"\n{green_col}Checking if the required packages are installed or not if not installing them !!{reset_col}\n")
 
