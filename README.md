@@ -1,3 +1,3 @@
 # pic-tool
-### Dont't run now wait for the release
+### Author : ASHWINI SAHU
 A image manipulation tool written in python ❤
