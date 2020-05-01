@@ -51,6 +51,7 @@ This tool can do many things like :-
                                         * Change the image format
                                         * Rotate the image
                                         * Greyscale the image 
+                                        * Extract the image Metadata
                                         * Remove the image Metadata
                                         * MORE TO BE ADDED
         """)
@@ -88,6 +89,7 @@ This tool can do many things like :-
                                         * Change the image format
                                         * Rotate the image
                                         * Greyscale the image 
+                                        * Extract the image Metadata
                                         * Remove the image Metadata
                                         * MORE TO BE ADDED
         """)
@@ -111,25 +113,22 @@ do_clear=True
 want_art=True
 dir_mode=False
 sin_mode=False
-sin_mode_argv=False
-dir_mode_argv=False
+sin_mode_arg=False
+dir_mode_ask_flag=True
 
 for args in sys.argv:
     if args == "--dir-mode" or args == "-dm" or args == "-d": ## CHECKING IF YOU WANT THE DIRECTORY MODE BY DEFAULT ##
         dir_mode=True
-        dir_mode_argv=True
+    else:
+        dir_mode_ask_flag=True
 
 for args in sys.argv:
     if args == "--sin-mode" or args == "-sm" or args == "-s": ## CHECKING IF YOU WANT THE SINGLE MODE BY DEFAULT ##
+        sin_mode_arg=True
         sin_mode=True
-        sin_mode_argv=True
+    else:
+        dir_mode_ask_flag=True
 
-if sin_mode == True and dir_mode == True:
-    dir_mode = True
-    sin_mode = False
-
-if sin_mode == False and dir_mode == False:
-    sin_mode = True
 
 ## NOTE : IF YOU PROVIDE BOTH SINLE AND DIRECTORY MODE FLAG IT WILL TAKE DIRECTORY MODE AS PRIORITY ##
 
@@ -229,18 +228,6 @@ def banner_print_no_color():
 clear_scr() ## CLEARING THE SCREEN
 banner() ## PRINTING THE BANNER
 
-## CHECKING FOR THE MODE ##
-
-if sin_mode == True:
-    if sin_mode_argv == True:
-        print("\n    Single Mode is active by user.\n")
-    elif sin_mode_argv == False:
-        print("\n    Single Mode is active by default.\n")
-
-if dir_mode == True:
-    print("\n    Directory Mode is active by user\n")
-
-
 ### MAIN MENU STARTS HERE ###
 
 def menu_list():
@@ -258,8 +245,8 @@ def menu_list_color():
     print (f'''
     {yellow_col}  [ {blue_col}1 {yellow_col}] {green_col}Resize Image.             {yellow_col}  [ {blue_col}5 {yellow_col}] {green_col}Rotate The Image.
     {yellow_col}  [ {blue_col}2 {yellow_col}] {green_col}Image Compressor.         {yellow_col}  [ {blue_col}6 {yellow_col}] {green_col}Grayscale The Image.
-    {yellow_col}  [ {blue_col}3 {yellow_col}] {green_col}Image Thumbnail Maker.    {yellow_col}  [ {blue_col}7 {yellow_col}] {green_col}Image Metadata Remover.
-    {yellow_col}  [ {blue_col}4 {yellow_col}] {green_col}Image Format Changer.
+    {yellow_col}  [ {blue_col}3 {yellow_col}] {green_col}Image Thumbnail Maker.    {yellow_col}  [ {blue_col}7 {yellow_col}] {green_col}Image Metadata Extractor.
+    {yellow_col}  [ {blue_col}4 {yellow_col}] {green_col}Image Format Changer.     {yellow_col}  [ {blue_col}8 {yellow_col}] {green_col}Image Metadata Remover.
 
     {yellow_col}  [ {blue_col}x {yellow_col}] {green_col}Exit. {reset_col}''')
 
@@ -270,8 +257,8 @@ def menu_list_no_color():
     print (f'''
       [ 1 ] Resize Image.               [ 5 ] Rotate The Image.
       [ 2 ] Image Compressor.           [ 6 ] Grayscale The Image.
-      [ 3 ] Image Thumbnail Maker.      [ 7 ] Image Metadata Remover.
-      [ 4 ] Image Format Changer.
+      [ 3 ] Image Thumbnail Maker.      [ 7 ] Image Metadata Extractor.
+      [ 4 ] Image Format Changer.       [ 8 ] Image Metadata Remover.
 
       [ x ] Exit. ''')
 
@@ -296,6 +283,47 @@ def option_taker():
             print(f"\n   Enter the right option")
             option_taker()
 
+
+## CHECKING FOR THE MODE ##
+
+def dir_mode_ask():
+    if dir_mode_ask_flag == True:
+        dir_mode_opt=input("\n    Do yo want the Single Image or Directory Mode  (s/d): ")
+        if dir_mode_opt == 'S' or dir_mode_opt == 's':
+            sin_mode=True
+            tmp_file=open(".tmp_pic-tool", "at")
+            tmp_file.write("s")
+            tmp_file.close()
+        elif dir_mode_opt == 'D' or dir_mode_opt == 'd':
+            dir_mode=True
+            tmp_file=open(".tmp_pic-tool", "at")
+            tmp_file.write("d")
+            tmp_file.close()
+        else:
+            print("\n    Enter right option (S/s) for Single Image or (D/d) for Directory Mode")
+            dir_mode_ask()
+
+if dir_mode == True:
+    dir_mode_ask_flag=False
+    sin_mode=False
+elif sin_mode_arg == True:
+    dir_mode_ask_flag=False
+else:
+    dir_mode_ask_flag=True
+    dir_mode_ask()
+    if os.path.exists(".tmp_pic-tool"):
+        tmp_file=open(".tmp_pic-tool", "r")
+        tmp_check=tmp_file.read()
+        if tmp_check == 's':
+            sin_mode=True
+        elif tmp_check == 'd':
+            dir_mode=True
+        if os.path.exists(".tmp_pic-tool"):
+            os.remove(".tmp_pic-tool")
+        else:
+            pass
+    else:
+            pass
 
 ###
 
@@ -725,213 +753,9 @@ def image_ext_changer():
 
 
 
-################################################ 5. ROTATE THE IMAGE ####################################################################################
+################################################ 5. GRAYSCALE THE IMAGE ####################################################################################
 
 
-def single_img_rotate():
-
-    # Note: For Windows while giving the path to the image or folder give paths as :-
-    # Example : F:\\Wallpaper\\Nature\\Forest.jpg      With double \\
-
-    img_path=input("\nEnter the path of the image : ")
-    if os.path.isfile(img_path) != True:
-        print("\nImage not found")
-        exit()
-    rot_deg=input("\nEnter the Degree of Rotation : ")
-    temp_rot_deg=rot_deg.isnumeric()
-    if temp_rot_deg == True:
-        rot_deg=int(rot_deg)
-    else:
-        print("\nDegree of Rotation must be number.")
-        exit(0)
-    tem_rot_deg = 0 <= rot_deg <= 360
-    if tem_rot_deg == False:
-            print("\nDegree of Rotation must be between 0 to 360.")
-            exit(0)
-    img_basename=os.path.basename(img_path)
-    image = Image.open(img_path)
-    print(f"\nFormat of image is : {image.format}")
-    print(f"\nDegree of  Rotation of new image is : {rot_deg}")
-    image_rot=image.rotate(rot_deg, expand=True)
-    image_rot.save(f'rotated_{rot_deg}_{img_basename}')
-    print("\nDone ✓")
-
-def dir_image_rotate_window():
-
-    # Note: For Windows while giving the path to the image or folder give paths as :-
-    # Example : F:\\Wallpaper\\Nature\\Forest.jpg      With double \\
-
-    img_dir_path=input("\nEnter the path of the image directory : ")
-    if os.path.isdir(img_dir_path) != True:
-        print("\nDirectory not found")
-        exit()
-    list_of_files = os.listdir(img_dir_path)
-    if len(list_of_files) == 0:
-        print("\nDirectory is empty")
-        exit(0)
-    rot_deg=input("\nEnter the Degree of Rotation : ")
-    temp_rot_deg=rot_deg.isnumeric()
-    if temp_rot_deg == True:
-        rot_deg=int(rot_deg)
-    else:
-        print("\nDegree of Rotation must be number.")
-        exit(0)
-    tem_rot_deg = 0 <= rot_deg <= 360
-    if tem_rot_deg == False:
-            print("\nDegree of Rotation must be between 0 to 360.")
-            exit(0)
-    print("\n")
-    for files in list_of_files:
-        if os.path.isfile(f"{img_dir_path}\\\\{files}"):
-            try:
-                image = Image.open(f"{img_dir_path}\\\\{files}")
-            except:
-                pass
-            else:
-                print(f'\rRotating image : {files}                                     ', end='')
-                sys.stdout.flush()
-                image_rot=image.rotate(rot_deg, expand=True)
-                image_rot.save(f'rotated_{rot_deg}_{files}') 
-    print("\n\nDone ✓")
-    exit(0)
-
-def dir_image_rotate_other():
-
-    img_dir_path=input("\nEnter the path of the image directory : ")
-    if os.path.isdir(img_dir_path) != True:
-        print("\nDirectory not found")
-        exit()
-    list_of_files = os.listdir(img_dir_path)
-    if len(list_of_files) == 0:
-        print("\nDirectory is empty")        
-        exit(0)
-    rot_deg=input("\nEnter the Degree of Rotation : ")
-    temp_rot_deg=rot_deg.isnumeric()
-    if temp_rot_deg == True:
-        rot_deg=int(rot_deg)
-    else:
-        print("\nDegree of Rotation must be number.")
-        exit(0)
-    tem_rot_deg = 0 <= rot_deg <= 360
-    if tem_rot_deg == False:
-            print("\nDegree of Rotation must be between 0 to 360.")
-            exit(0)
-    print("\n")
-    for files in list_of_files:
-        if os.path.isfile(f"{img_dir_path}/{files}"):
-            try:
-                image = Image.open(f"{img_dir_path}/{files}")
-            except:
-                pass
-            else:
-                print(f'\rRotating image : {files}                                     ', end='')
-                sys.stdout.flush()
-                image_rot=image.rotate(rot_deg, expand=True)
-                image_rot.save(f'rotated_{rot_deg}_{files}')
-    print("\n\nDone ✓")
-    exit(0)
-
-def image_rotator():
-    if sin_mode == True:
-        single_img_rotate()
-    elif dir_mode == True:
-        if os.name == 'nt':
-            dir_image_rotate_window()
-        else:
-            dir_image_rotate_other()
-
-
-
-
-################################################ 6. ROTATE THE IMAGE ####################################################################################
-
-
-def single_img_greyscale():
-
-    # Note: For Windows while giving the path to the image or folder give paths as :-
-    # Example : F:\\Wallpaper\\Nature\\Forest.jpg      With double \\
-
-    img_path=input("\nEnter the path of the image : ")
-    if os.path.isfile(img_path) != True:
-        print("\nImage not found")
-        exit()
-    
-    img_basename=os.path.basename(img_path)
-    image = Image.open(img_path)
-    print(f"\nFormat of image is : {image.format}")
-    print(f"\nWidth : {image.size[0]}      Height : {image.size[1]}") ## Size of original image
-    greyscale_image = image.convert('L')
-    greyscale_image.save(f'greyscaled_{img_basename}')
-    print("\nDone ✓")
-
-def dir_image_greyscale_window():
-
-
-    # Note: For Windows while giving the path to the image or folder give paths as :-
-    # Example : F:\\Wallpaper\\Nature\\Forest.jpg      With double \\
-
-    img_dir_path=input("\nEnter the path of the image directory : ")
-    if os.path.isdir(img_dir_path) != True:
-        print("\nDirectory not found")
-        exit()
-    list_of_files = os.listdir(img_dir_path)
-    if len(list_of_files) == 0:
-        print("\nDirectory is empty")
-        exit(0)
-    print("\n")
-    for files in list_of_files:
-        if os.path.isfile(f"{img_dir_path}\\\\{files}"):
-            try:
-                image = Image.open(f"{img_dir_path}\\\\{files}")
-                print(f'\rGreyscaling image : {files}                                     ', end='')
-                sys.stdout.flush()
-            except:
-                pass
-            else:
-                greyscale_image = image.convert('L')
-                greyscale_image.save(f'greyscaled_{files}')
-    print("\n\nDone ✓")
-    exit(0)
-
-def dir_image_greyscale_other():
-
-    img_dir_path=input("\nEnter the path of the image directory : ")
-    if os.path.isdir(img_dir_path) != True:
-        print("\nDirectory not found")
-        exit()
-    list_of_files = os.listdir(img_dir_path)
-    if len(list_of_files) == 0:
-        print("\nDirectory is empty")        
-        exit(0)
-    print("\n")
-    for files in list_of_files:
-        if os.path.isfile(f"{img_dir_path}/{files}"):
-            try:
-                image = Image.open(f"{img_dir_path}/{files}")
-                print(f'\rGreyscaling image : {files}                                     ', end='')
-                sys.stdout.flush()
-            except:
-                pass
-            else:
-                pass
-                greyscale_image = image.convert('L')
-                greyscale_image.save(f'greyscaled_{files}')
-    print("\n\nDone ✓")
-    exit(0)
-
-def image_greyscale():
-    if sin_mode == True:
-        single_img_greyscale()
-    elif dir_mode == True:
-        if os.name == 'nt':
-            dir_image_greyscale_window()
-        else:
-            dir_image_greyscale_other()
-
-
-
-
-################################################ 7. Image Metadata Extractor ####################################################################################
 
 
 
@@ -990,14 +814,10 @@ def option_launcher(opt):
     elif opt == "3":
         image_thumbnailer()
     elif opt == "4":
-        image_ext_changer()
-    elif opt == "5":
-        image_rotator()
-    elif opt == "6":
-        image_greyscale()
-    elif opt == "7":
         pass
-    elif opt == "8":
+    elif opt == "5":
+        pass
+    elif opt == "6":
         pass
     elif opt == "x" or opt == "X":
         print(f"\n   Exiting the tool Bye !!")

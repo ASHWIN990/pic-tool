@@ -18,6 +18,17 @@ cyan_col="\u001b[36m"
 white_col="\u001b[37m"
 reset_col="\u001b[0m"
 
+## CHECKING FOR ROOT ACCESS FOR POSIX USER ##
+
+if os.name == 'posix':
+    if os.getuid() == 0:
+        pass
+    else:
+        print(f"{red_col}The Script must be run as Root.")
+        exit(0)
+else:
+    pass
+
 ## FUNTION FOR CHECKING THE OS ##
 
 if platform.system() == 'Linux':
@@ -96,6 +107,7 @@ def install_pkg_linux():
             print(f"installing the package {pkg}\n")
             os.system(f"pip install {pkg}")
 
+
 def install_pkg_macOS():
     print(f"{yellow_col}The platform is {red_col}{platform_current} {yellow_col}and i suggest to install the packages by yourself and then run the script.\n")
     print(f"\nRequired packages are :- {green_col}")
@@ -118,7 +130,7 @@ required_pkg=req_pak() ## MAKKING A LIST OF INSTALLED PACKAGES
 installed_packages=chk_installed_pkg() ## MAKING A LIST OF INSTALLED PACKAGES
 
 print(f"{yellow_col}Thanks for installing the pic-tool {red_col}❤{reset_col}\n")
-sleep(3) ## WAIT FOR 3 SECOND JUST FOR FUN
+sleep(1.5) ## WAIT FOR 3 SECOND JUST FOR FUN
 print(f"The current platform is {green_col}{platform_current} {reset_col}and release is {green_col}{platform.release()}{reset_col}")
 print(f"\n{green_col}Checking if the required packages are installed or not if not installing them !!{reset_col}\n")
 
