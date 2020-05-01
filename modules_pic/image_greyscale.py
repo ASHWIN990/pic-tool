@@ -4,7 +4,8 @@ import os
 import sys
 from PIL import Image
 
-def single_img_compress():
+
+def single_img_greyscale():
 
     # Note: For Windows while giving the path to the image or folder give paths as :-
     # Example : F:\\Wallpaper\\Nature\\Forest.jpg      With double \\
@@ -13,21 +14,16 @@ def single_img_compress():
     if os.path.isfile(img_path) != True:
         print("\nImage not found")
         exit()
-    compr_rat=input("\nEnter the Compress Ratio (ex: 50) : ")
-    compr_rat_tmp = compr_rat.isnumeric()
-    if compr_rat_tmp == True:
-        compr_rat=int(compr_rat)
-    else:
-        print("\n\nCompress Ratio must be number.\n")
-        exit(0)
+    
     img_basename=os.path.basename(img_path)
     image = Image.open(img_path)
     print(f"\nFormat of image is : {image.format}")
-    print(f"\nCompression Ration of image is : {compr_rat}")
-    image.save(f'compressed_{img_basename}', quality=compr_rat)
+    print(f"\nWidth : {image.size[0]}      Height : {image.size[1]}") ## Size of original image
+    greyscale_image = image.convert('L')
+    greyscale_image.save(f'greyscaled_{img_basename}')
     print("\nDone ✓")
 
-def dir_image_compress_window():
+def dir_image_greyscale_window():
 
 
     # Note: For Windows while giving the path to the image or folder give paths as :-
@@ -41,29 +37,23 @@ def dir_image_compress_window():
     if len(list_of_files) == 0:
         print("\nDirectory is empty")
         exit(0)
-    compr_rat=input("\nEnter the Compress Ratio (ex: 50) : ")
-    compr_rat_tmp = compr_rat.isnumeric()
-    if compr_rat_tmp == True:
-        compr_rat=int(compr_rat)
-    else:
-        print("\n\nCompress Ratio must be number.\n")
-        exit(0)
     print("\n")
     for files in list_of_files:
         if os.path.isfile(f"{img_dir_path}\\\\{files}"):
             try:
                 image = Image.open(f"{img_dir_path}\\\\{files}")
+                print(f'\rGreyscaling image : {files}                                     ', end='')
+                sys.stdout.flush()
             except:
                 pass
             else:
-                print(f'\rCompressing image : {files}                                     ', end='')
-                sys.stdout.flush()
-                image.save(f'compressed_{files}', quality=compr_rat)
+                greyscale_image = image.convert('L')
+                greyscale_image.save(f'greyscaled_{files}')
     print("\n\nDone ✓")
     exit(0)
 
 
-def dir_image_compress_other():
+def dir_image_greyscale_other():
 
     img_dir_path=input("\nEnter the path of the image directory : ")
     if os.path.isdir(img_dir_path) != True:
@@ -73,24 +63,18 @@ def dir_image_compress_other():
     if len(list_of_files) == 0:
         print("\nDirectory is empty")        
         exit(0)
-    compr_rat=input("\nEnter the Compress Ratio (ex: 50) : ")
-    compr_rat_tmp = compr_rat.isnumeric()
-    if compr_rat_tmp == True:
-        compr_rat=int(compr_rat)
-    else:
-        print("\n\nCompress Ratio must be number.\n")
-        exit(0)
     print("\n")
     for files in list_of_files:
         if os.path.isfile(f"{img_dir_path}/{files}"):
             try:
                 image = Image.open(f"{img_dir_path}/{files}")
+                print(f'\rGreyscaling image : {files}                                     ', end='')
+                sys.stdout.flush()
             except:
                 pass
             else:
-                print(f'\rCompressing image : {files}                                     ', end='')
-                sys.stdout.flush()
-                image.save(f'compressed_{files}', quality=compr_rat)
+                pass
+                greyscale_image = image.convert('L')
+                greyscale_image.save(f'greyscaled_{files}')
     print("\n\nDone ✓")
     exit(0)
-

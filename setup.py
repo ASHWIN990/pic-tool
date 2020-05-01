@@ -73,7 +73,7 @@ def banner():
                         """)
 
 def req_pak():
-    required_pkg=["Pillow", "progress"]
+    required_pkg=["Pillow", "exifread"]
     return required_pkg
 
 def chk_installed_pkg():
@@ -133,6 +133,6 @@ elif platform_current == "macOS":
 else:
     install_pkg_other() ## Using the other installer
 
-print(f"\n{yellow_col}Thanks for installation of pic-tool is succesfull{reset_col}\n")
+print(f"\n{yellow_col}Installation of pic-tool is succesfull{reset_col}\n")
 
 ## DONE INSTALLING 
