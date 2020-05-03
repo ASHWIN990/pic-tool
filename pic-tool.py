@@ -2,7 +2,7 @@
 
 ## Toolname : pic-tool
 ## Git-Repo URL : https://github.com/ASHWIN990/pic-tool.git
-## Name : Ashwini Sahu 
+## Name : Ashwini Sahu
 ## Date : 01/May/2020
 
 import os
