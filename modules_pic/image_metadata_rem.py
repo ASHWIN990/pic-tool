@@ -79,7 +79,7 @@ def single_img_meta_rem(args):
     # Note: For Windows while giving the path to the image or folder give paths as :-
     # Example : F:\\Wallpaper\\Nature\\Forest.jpg      With double \\
 
-    img_path=int(args.img)
+    img_path=str(args.img)
     img_basename=os.path.basename(img_path)
     image = Image.open(img_path)
     print(f"Format of image is : {image.format}")
