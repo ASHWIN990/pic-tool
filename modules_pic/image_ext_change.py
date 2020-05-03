@@ -41,7 +41,7 @@ def main():
     parser.add_argument("-s", "--single", action='store_true', default=False, help="Enables Single image mode.",)
     parser.add_argument("-d", "--dir", action='store_true', default=False, help="Enables Directory image mode.",)
     parser.add_argument("--ext", metavar="EXTENSION", required=True, type=str, help="Provide the new image extension.")
-    parser.add_argument("--img", metavar="IMAGE", required=True, type=str, help="Provide the path of Image for Single mode or path of Dir for Dir mode.")
+    parser.add_argument("--img", metavar="PATH", required=True, type=str, help="Provide the path of Image for Single mode or path of Dir for Dir mode.")
 
     args = parser.parse_args()
 
@@ -92,7 +92,6 @@ def single_img_ext_changer(args):
     print(f"Format of image is : {image.format}")
     print(f"Width : {image.size[0]}      Height : {image.size[1]}") ## Size of original image
     try:
-        image.save(f'{img_name}.{new_ext}')
         img_name=os.path.splitext(files)[0]
         image.save(f'{img_name}.{new_ext}')
     except:

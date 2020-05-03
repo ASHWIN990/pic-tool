@@ -41,7 +41,7 @@ def main():
     parser.add_argument("-s", "--single", action='store_true', default=False, help="Enables Single image mode.",)
     parser.add_argument("-d", "--dir", action='store_true', default=False, help="Enables Directory image mode.",)
     parser.add_argument("--comp", metavar="COMPRESS", type=int, default=50, help="Provide the Compression ratio of new image, Default : 50, Range (10-90) Where 10 is the most compressed.")
-    parser.add_argument("--img", metavar="IMAGE", required=True, type=str, help="Provide the path of Image for Single mode or path of Dir for Dir mode.")
+    parser.add_argument("--img", metavar="PATH", required=True, type=str, help="Provide the path of Image for Single mode or path of Dir for Dir mode.")
 
     args = parser.parse_args()
 

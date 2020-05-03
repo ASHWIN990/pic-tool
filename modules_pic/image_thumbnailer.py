@@ -42,7 +42,7 @@ def main():
     parser.add_argument("-d", "--dir", action='store_true', default=False, help="Enables Directory image mode.",)
     parser.add_argument("--hei", metavar="HEIGHT", type=int, default=250, help="Provide the Height of new thumbnail, Default : 250")
     parser.add_argument("--wid", metavar="WIDTH", type=int, default=250, help="Provide the Width of thumbnail, Default : 250")
-    parser.add_argument("--img", metavar="IMAGE", required=True, type=str, help="Provide the path of Image for Single mode or path of Dir for Dir mode.")
+    parser.add_argument("--img", metavar="PATH", required=True, type=str, help="Provide the path of Image for Single mode or path of Dir for Dir mode.")
 
     args = parser.parse_args()
 
