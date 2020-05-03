@@ -85,7 +85,6 @@ def single_img_meta_rem(args):
     print(f"Format of image is : {image.format}")
     print(f"Width : {image.size[0]}      Height : {image.size[1]}") ## Size of original image
     try:
-        image.save(f'{img_name}.{new_ext}')
         image.save(f'No_Exif_{img_basename}')
     except:
         pass
