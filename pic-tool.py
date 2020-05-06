@@ -123,18 +123,22 @@ for args in sys.argv:
     if args == "--dir-mode" or args == "-dm" or args == "-d": ## CHECKING IF YOU WANT THE DIRECTORY MODE BY DEFAULT ##
         dir_mode=True
         dir_mode_argv=True
+        mode_msg="Directory Mode is active by user"
 
 for args in sys.argv:
     if args == "--sin-mode" or args == "-sm" or args == "-s": ## CHECKING IF YOU WANT THE SINGLE MODE BY DEFAULT ##
         sin_mode=True
         sin_mode_argv=True
+        mode_msg="Single Mode is active by user"
 
 if sin_mode == True and dir_mode == True:
     dir_mode = True
     sin_mode = False
+    mode_msg="Both single and dir mode flag is passed, Taking dir mode."
 
 if sin_mode == False and dir_mode == False:
     sin_mode = True
+    mode_msg="No flag is passed so taking Single Mode by default."
 
 ## NOTE : IF YOU PROVIDE BOTH SINLE AND DIRECTORY MODE FLAG IT WILL TAKE DIRECTORY MODE AS PRIORITY ##
 
@@ -238,12 +242,12 @@ banner() ## PRINTING THE BANNER
 
 if sin_mode == True:
     if sin_mode_argv == True:
-        print("\n    Single Mode is active by user.\n")
+        print(f"\n    {mode_msg}\n")
     elif sin_mode_argv == False:
-        print("\n    Single Mode is active by default.\n")
+        print(f"\n    {mode_msg}\n")
 
 if dir_mode == True:
-    print("\n    Directory Mode is active by user\n")
+    print(f"\n    {mode_msg}\n")
 
 
 ### MAIN MENU STARTS HERE ###

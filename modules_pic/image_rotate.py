@@ -61,7 +61,7 @@ def main():
     parser.add_argument("-s", "--single", action='store_true', default=False, help="Enables Single image mode.",)
     parser.add_argument("-d", "--dir", action='store_true', default=False, help="Enables Directory image mode.",)
     parser.add_argument("--rot", metavar="ROTATION", type=int, default=180, help="Provide the Degree of Rotation of new image, Default : 180, Range (0-360).")
-    parser.add_argument("--img", metavar="IMAGE", required=True, type=str, help="Provide the path of Image for Single mode or path of Dir for Dir mode")
+    parser.add_argument("--img", metavar="PATH", required=True, type=str, help="Provide the path of Image for Single mode or path of Dir for Dir mode")
 
     args = parser.parse_args()
 

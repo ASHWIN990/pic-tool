@@ -56,7 +56,7 @@ def main():
     parser = argparse.ArgumentParser(description=f"Image Metadata Remover, Writeen by : {blue_col}ASHWINI SAHU{reset_col}, GITHUB : https:github.com/ASHWIN990/pic-tool.git")
     parser.add_argument("-s", "--single", action='store_true', default=False, help="Enables Single image mode.",)
     parser.add_argument("-d", "--dir", action='store_true', default=False, help="Enables Directory image mode.",)
-    parser.add_argument("--img", metavar="IMAGE", required=True, type=str, help="Provide the path of Image for Single mode or path of Dir for Dir mode.")
+    parser.add_argument("--img", metavar="PATH", required=True, type=str, help="Provide the path of Image for Single mode or path of Dir for Dir mode.")
 
     args = parser.parse_args()
 
