@@ -97,7 +97,7 @@ def install_pkg_windows():
             print(f"{pkg} requirement satisfied\n")
         else:
             print(f"installing the package {pkg}\n")
-            os.system(f"pip install {pkg}")
+            os.system(f"pip3 install {pkg}")
 
 def install_pkg_linux():
     for pkg in required_pkg:
@@ -105,7 +105,11 @@ def install_pkg_linux():
             print(f"{pkg} requirement satisfied\n")
         else:
             print(f"installing the package {pkg}\n")
-            os.system(f"pip install {pkg}")
+            os.system(f"pip3 install {pkg}")
+    os.system("mv -f pic-tool /usr/bin/ | echo 'Copying the pic-tool script'")
+    os.system("mv -f modules_pic/* /usr/bin/ | echo 'Copying all the scripts'")
+    os.system("mv -f man-pages/* /usr/local/share/man/man1/")
+    os.system("mandb -q | echo 'Installing Man pages and updating the Mandb'")
 
 
 def install_pkg_macOS():
