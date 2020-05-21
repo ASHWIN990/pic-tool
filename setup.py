@@ -1,16 +1,10 @@
-#!/bin/usr/python3
-
-
-# to add this to the /bin/usr for linux 
-# and for windows to the path
+#!/usr/bin/env python3
 
 import os
+import sys
 import platform
-try:
-    from time import sleep
-    is_time_module_avb=True
-except ImportError as e:
-    is_time_module_avb=False
+from pip._internal.utils.misc import get_installed_distributions
+from time import sleep
 
 ## TRYING SOME COLORS ##
 
@@ -22,6 +16,18 @@ blue_col="\u001b[34m"
 magenta_col="\u001b[35m"
 cyan_col="\u001b[36m"
 white_col="\u001b[37m"
+reset_col="\u001b[0m"
+
+## CHECKING FOR ROOT ACCESS FOR POSIX USER ##
+
+if os.name == 'posix':
+    if os.getuid() == 0:
+        pass
+    else:
+        print(f"{red_col}The Script must be run as Root.")
+        exit(0)
+else:
+    pass
 
 ## FUNTION FOR CHECKING THE OS ##
 
@@ -32,12 +38,11 @@ elif platform.system() == 'Windows':
     print("Platform is Windows")
     platform_current="Windows"
 elif platform.system() == 'Darwin':
-    print("Platform is Mac")
+    print("Platform is macOS")
     platform_current="macOS"
 else:
     print("Taking Platorm as Linux Cause Cant Determine the Platform")
-    if is_time_module_avb == True:
-        sleep(2)
+    sleep(2)
     platform_current="Linux"
 
 ## FUNCTION TO CLEAR THE SCREEN ##
@@ -74,16 +79,72 @@ def banner():
         {green_col}||;;;;;-.;_    /.-;;;;;;||{yellow_col}      $$/
         {green_col}||;;;;;;;;;;;;;;;;;;;;;;||
         {green_col}||{red_col}A{yellow_col}S{blue_col}H{green_col};;;;;;;;;;;;;;;;;;;||
-        {green_col}'------------------------'{white_col}
+        {green_col}'------------------------'{reset_col}
 
                         """)
 
+def req_pak():
+    required_pkg=["Pillow", "exifread"]
+    return required_pkg
+
+def chk_installed_pkg():
+    installed_packages = [package.project_name for package in get_installed_distributions()]
+    return installed_packages
+
+def install_pkg_windows():
+    for pkg in required_pkg:
+        if pkg in installed_packages:
+            print(f"{pkg} requirement satisfied\n")
+        else:
+            print(f"installing the package {pkg}\n")
+            os.system(f"pip install {pkg}")
+
+def install_pkg_linux():
+    for pkg in required_pkg:
+        if pkg in installed_packages:
+            print(f"{pkg} requirement satisfied\n")
+        else:
+            print(f"installing the package {pkg}\n")
+            os.system(f"pip install {pkg}")
+
+
+def install_pkg_macOS():
+    print(f"{yellow_col}The platform is {red_col}{platform_current} {yellow_col}and i suggest to install the packages by yourself and then run the script.\n")
+    print(f"\nRequired packages are :- {green_col}")
+    for pkg in required_pkg:
+        print(f"\t\t{pkg}")
+    print(f"{reset_col}")
+    os._exit(0)
+
+def install_pkg_other():
+    print(f"{yellow_col}The platform is {red_col}{platform_current} {yellow_col}and i suggest to install the packages by yourself and then run the script.\n")
+    print(f"\nRequired packages are :- {green_col}")
+    for pkg in required_pkg:
+        print(f"\t\t{pkg}")
+    print(f"{reset_col}")
+    os._exit(0)
+
 clear_scr() ## CLEARING THE SCREEN
 banner() ## PRINTING THE BANNER
+required_pkg=req_pak() ## MAKKING A LIST OF INSTALLED PACKAGES
+installed_packages=chk_installed_pkg() ## MAKING A LIST OF INSTALLED PACKAGES
 
-print("Thanks for installing the pic-tool ❤\n")
+print(f"{yellow_col}Thanks for installing the pic-tool {red_col}❤{reset_col}\n")
+sleep(1.5) ## WAIT FOR 3 SECOND JUST FOR FUN
+print(f"The current platform is {green_col}{platform_current} {reset_col}and release is {green_col}{platform.release()}{reset_col}")
+print(f"\n{green_col}Checking if the required packages are installed or not if not installing them !!{reset_col}\n")
 
-print(f"The current platform is {platform_current} and release is {platform.release()}")
+## INSTALLING THE REQUIRED PAKAGES ##
 
-print("\nChecking if the required packages are installed or not if not installing them !!")
+if platform_current == "Windows":
+    install_pkg_windows() ## Using the Windows installer
+elif platform_current == "Linux":
+    install_pkg_linux() ## Using the Linux installer
+elif platform_current == "macOS":
+    install_pkg_macOS() ## Using the macOS installer 
+else:
+    install_pkg_other() ## Using the other installer
 
+print(f"\n{yellow_col}Installation of pic-tool is succesfull{reset_col}\n")
+
+## DONE INSTALLING 
