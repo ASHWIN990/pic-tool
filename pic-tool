@@ -729,8 +729,7 @@ def image_ext_changer():
 
 
 
-
-################################################ 5. ROTATE THE IMAGE ####################################################################################
+################################################ 5. ROTATING THE IMAGE ####################################################################################
 
 
 def single_img_rotate():
@@ -847,7 +846,6 @@ def image_rotator():
 
 
 
-
 ################################################ 6. ROTATE THE IMAGE ####################################################################################
 
 
@@ -888,7 +886,7 @@ def dir_image_greyscale_window():
         if os.path.isfile(f"{img_dir_path}\\\\{files}"):
             try:
                 image = Image.open(f"{img_dir_path}\\\\{files}")
-                print(f'\rGreyscaling image : {files}                                     ', end='')
+                print(f'\rGreyscaling image : {files}                                  ', end='')
                 sys.stdout.flush()
             except:
                 pass
@@ -913,7 +911,7 @@ def dir_image_greyscale_other():
         if os.path.isfile(f"{img_dir_path}/{files}"):
             try:
                 image = Image.open(f"{img_dir_path}/{files}")
-                print(f'\rGreyscaling image : {files}                                     ', end='')
+                print(f'\rGreyscaling image : {files}                                  ', end='')
                 sys.stdout.flush()
             except:
                 pass
@@ -944,7 +942,7 @@ def image_greyscale():
 def single_img_meta_rem():
 
     # Note: For Windows while giving the path to the image or folder give paths as :-
-    # Example : F:\\Wallpaper\\Nature\\Forest.jpg      With double \\
+    # Example : F:\\Wallpaper\\Nature\\Forest.jpg    With double \\
 
     img_path=input("\nEnter the path of the image : ")
     if os.path.isfile(img_path) != True:
@@ -953,7 +951,7 @@ def single_img_meta_rem():
     img_basename=os.path.basename(img_path)
     image = Image.open(img_path)
     print(f"\nFormat of image is : {image.format}")
-    print(f"\nWidth : {image.size[0]}      Height : {image.size[1]}") ## Size of original image
+    print(f"\nWidth : {image.size[0]}    Height : {image.size[1]}") ## Size of original image
     try:
         image.save(f'No_Exif_{img_basename}')
     except:
@@ -966,7 +964,7 @@ def dir_image_meta_rem_window():
 
 
     # Note: For Windows while giving the path to the image or folder give paths as :-
-    # Example : F:\\Wallpaper\\Nature\\Forest.jpg      With double \\
+    # Example : F:\\Wallpaper\\Nature\\Forest.jpg     With double \\
 
     img_dir_path=input("\nEnter the path of the image directory : ")
     if os.path.isdir(img_dir_path) != True:
@@ -1033,7 +1031,7 @@ def image_meta_rem():
 
 ################################################################## END OF THE SCRIPT ####################################################################################
 
-## Function For Checking The Given Option
+## Function For Checking The Given Option if option is valid or not
 
 def option_launcher(opt):
 
